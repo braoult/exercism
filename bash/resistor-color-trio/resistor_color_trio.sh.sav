@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+#
+# V1: initial version
+# V2: merged the
+
+# set to mask to enable logs. 0: none, 255: all
+# ((debug=2#00011111))
+((debug=2#00000000))
+
+# $1: log level (mask), then strings to display.
+debug () {
+    (( debug & $1 )) && shift && echo "${@}" >&2
+}
+
+die () {
+    echo "${@}" >&2
+    exit 1
+}
+
+usage() {
+    die "usage: resistor_color_trio.sh color1 [color2 [color3]]"
+}
+
+# value/power of different colors
+declare -A colors=([black]=0 [brown]=1 [red]=2 [orange]=3 [yellow]=4
+                   [green]=5 [blue]=6 [violet]=7 [grey]=8 [white]=9)
+# available multiplicators (powers of 10)
+declare -a powers=(9 6 3)
+
+scalestr=""                                                 # "giga", etc...
+(( result=0 ))                                              # number to display
+# corresponding strings
+declare -a powernames=(giga mega kilo)
+
+# not sure here if 1 or 2 colors only should be accepted (not in test cases).
+# I will assume yes, it looks more coherent, even if out of scope:
+#   "resistor_color_trio.sh Black" will return 0
+#   "resistor_color_trio.sh yellow violet" will return 47
+# also: (not in test cases), no args will return an error.
+#       (in test case), extra colors are ignored, I don't like it, personally
+(( $# == 0 )) && usage
+
+debug 64 "params=${#params[@]} ${params[@]}"
+
+# converting to lower case, adding default values if args missing
+params=( ${@,,} black black black )
+debug 2 "#params=${#params[@]} ${params[@]}"
+
+# I would have preferred to throw an error if $# > 3, instead of ignoring
+# extra args...
+for ((i=0; i<3 && i<${#params[@]}; ++i)); do
+    color="${params[$i]}"                                   # color name
+    val="${colors[$color]}"                                 # color value
+
+    debug 4 val="$val" color="${color[$i]}"
+    [[ -z "$val" ]] && die "$color: invalid color."
+    case $i in
+        0)  (( result=val ))
+            debug 2 "new color 1 $color/$val. result=$result"
+            ;;
+        # probably case 0 and 1 could be merged. Easier to read for me
+        # by separating them.
+        1)  (( result*=10 ))
+            (( result+=val ))
+            debug 2 "new color 2 $color/$val. result=$result"
+            ;;
+        2)  (( result *= 10 ** val ))
+            debug 2 "new color 3 $color/$val. result=$result"
+            ;;
+    esac
+done
+
+# we have final number, scaling to corresponding strings.
+for (( j=0; result && j<${#powers[@]}; ++j )); do
+    (( pow = 10 ** ${powers[j]} ))
+    debug 8 "val=$val result=$result j=$j pow=$pow"
+    if ! (( result && result % pow )); then
+        ((result /= pow))
+        scalestr=${powernames[$j]}
+        break
+    fi
+done
+
+
+debug 4 res="$result" scalestr="$scalestr"
+
+echo "$result ${scalestr}ohms"
+
+exit 0
+
+# emacs/vim settings below.
+
+# Local Variables:
+# sh-basic-offset: 4
+# indent-tabs-mode: nil
+# comment-column: 50
+# fill-column: 80
+# End:
+# vim: set tabstop=4 expandtab:
