@@ -1,5 +1,5 @@
-/* See GNUmakefile in following link for explanation
- * https://exercism.io/my/solutions/103b2f7d92db42309c1988030f5202c7
+/* See GNUmakefile below for explanation
+ * https://github.com/braoult/exercism/blob/master/c/templates/GNUmakefile
  */
 #ifdef  TESTALL
 #undef  TEST_IGNORE
