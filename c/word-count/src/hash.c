@@ -3,28 +3,18 @@
 
 #include "hash.h"
 
-#define HASH_SIZE 50
+/* TODO:
+ * - multiple linked pools
+ * - free pools ?
+ * - do a kernel-like list management, + add counter for pool elements
+ *   so that they get freed when counter becomes zero (to allow an element
+ *   to be in multiple lists)
+ */
 
-//static hash_t *hash_table[HASH_SIZE];
 static h_entry_t *pool_free, *alloc_entries;
 static int n_entries;
 
-void h_init(hash_t *hash)
-{
-    memset(hash->entries, 0, sizeof(h_entry_t)*hash->size);
-}
-
-hash_t *h_create(int size)
-{
-    hash_t *hash;
-
-    if ( !(hash=calloc(sizeof(hash_t) + size*(sizeof (h_entry_t *)), 1)) )
-        return NULL;
-    hash->size=size;
-    return hash;
-}
-
-void h_destroy(hash_t *h)
+void h_free_all(hash_t *h)
 {
     h_entry_t *tmp;
 
@@ -35,6 +25,32 @@ void h_destroy(hash_t *h)
             h->entries[i]=tmp;
         }
     }
+}
+
+/* Should be used only when using unknown memory state, which is unlickely.
+ * Instead prefer:
+ * h_free_all: removes all entries from hash table
+ * h_destroy: cleans entries, and free hash memory
+ * TODO: add size parameter, to totally create a hash in known available memory
+ */
+void h_init(hash_t *h)
+{
+    memset(h->entries, 0, sizeof(h_entry_t)*h->size);
+}
+
+hash_t *h_create(int size)
+{
+    hash_t *hash;
+
+    if ( !(hash=calloc(1, sizeof(hash_t) + size*(sizeof (h_entry_t *)))) )
+        return NULL;
+    hash->size=size;
+    return hash;
+}
+
+void h_destroy(hash_t *h)
+{
+    h_free_all(h);
     free(h);
 }
 
@@ -60,7 +76,7 @@ h_entry_t *h_entry_find(hash_t *h, const unsigned char *s, const int l)
     h_entry_t *entry;
     int found=0;
 
-#   ifdef DEBUG
+#   ifdef DEBUG_HASH
     printf("h_entry_find([%.*s]): hash=%#lx (%lu) - ", l, s, hash, hash%h->size);
 #   endif
     hash%=h->size;
@@ -70,7 +86,7 @@ h_entry_t *h_entry_find(hash_t *h, const unsigned char *s, const int l)
             break;
         }
     }
-#   ifdef DEBUG
+#   ifdef DEBUG_HASH
     printf("ret=%p\n", found? (void *)entry: (void *)-1);
 #   endif
     return found? entry: NULL;
@@ -86,17 +102,15 @@ h_entry_t *h_entry_add(hash_t *h, const unsigned char *s, const int l, int *inse
     if (!pool_free) {
         register int i=n_entries;
 
-        n_entries+=ENTRY_ALLOC_SIZE;
-#       ifdef DEBUG
+        n_entries+=POOL_ALLOC_SIZE;
+#       ifdef DEBUG_HASH
         printf("get_hash: allocating %d new entries - total entries=%d\n",
-               ENTRY_ALLOC_SIZE, n_entries);
+               POOL_ALLOC_SIZE, n_entries);
 #       endif
         alloc_entries=reallocarray(alloc_entries, n_entries, sizeof(h_entry_t));
 
-        for (; i<n_entries; ++i) {                /* create free entries list */
-            (alloc_entries+i)->next=pool_free;
-            pool_free=alloc_entries+i;
-        }
+        for (; i<n_entries; ++i)
+            h_entry_free(alloc_entries+i);
     }
     if ((entry=h_entry_find(h, s, l)))
         return entry;
@@ -116,8 +130,7 @@ h_entry_t *h_entry_add(hash_t *h, const unsigned char *s, const int l, int *inse
     entry->data=(unsigned char *)s;
     entry->key_len=l;
 
-    //assert(entry!=freenodes);
-#   ifdef DEBUG
+#   ifdef DEBUG_HASH
     printf("h_entry_add: %p\n", (void *)entry);
 #   endif
     return entry;

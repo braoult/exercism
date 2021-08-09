@@ -33,9 +33,6 @@ static word_t next_word(const char **p)
     static char tmp[1024];
     int pos=0;
 
-#   ifdef DEBUG
-    printf("next_word(%s)\n", *p);
-#   endif
     for (; *p1 && !isalpha(*p1) && !isdigit(*p1); ++p1)
         ;
 
@@ -70,18 +67,11 @@ static word_t next_word(const char **p)
         *p=q;
     }
 end:
-#   ifdef DEBUG
-    printf("next_word: [%s], %d\n", res.word? res.word: "NULL", res.len);
-#   endif
     return res;
 }
 
 static int insert_word(word_count_word_t *words, word_t w, int pos)
 {
-#ifdef DEBUG
-    printf("insert words(len=%d word=[%.*s])\n", w.len, w.len, w.word);
-#endif
-
     memcpy(words[pos].text, w.word, w.len);
     words[pos].text[w.len]=0;
     words[pos].count=0;
@@ -94,14 +84,8 @@ int count_words(const char *sentence, word_count_word_t *words)
     int current=0, new, index;
     hash_t *hash;
     h_entry_t *e;
-#   ifdef DEBUG
-    const char *s=sentence;
-#   endif
 
     hash=h_create(16);
-#   ifdef DEBUG
-    printf("count_words([%s], %p)\n", sentence, (void *)words);
-#   endif
     for (; *sentence;) {
         w=next_word(&sentence);
         if (!w.word)
@@ -117,12 +101,6 @@ int count_words(const char *sentence, word_count_word_t *words)
         }
         index=(word_count_word_t *)e->data-&words[0];
         words[index].count++;
-        //sentence=w.word+w.len;
-        //sentence+=w.len;
-#       ifdef DEBUG
-        printf("count_words: index=%d\n", index);
-        printf("offset=%d\n", (int)(sentence-s));
-#       endif
     }
     h_destroy(hash);
     return current;
@@ -139,7 +117,6 @@ static void print_wtable(int n)
 {
     for (int i=0; i<n; ++i) {
         printf ("%2d: %2d x \"%s\"\n", i, wtable[i].count, wtable[i].text);
-                //djb2_hash(wtable[i].text));
     }
 
 }
@@ -148,15 +125,11 @@ int main(int ac, char **av)
 {
     int arg=1;
     int res;
-    //hash=h_create(16);
     for (; arg<ac; ++arg) {
         reset_wtable();
         res=count_words(av[arg], wtable);
         printf ("res=%d\n", res);
         print_wtable(res);
     }
-    //printf("h_destroy 1\n");
-    //h_destroy(hash);
-    //printf("h_destroy 1\n");
 }
 #endif

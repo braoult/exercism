@@ -41,7 +41,7 @@ mem: clean memcheck
 unit: CFLAGS+=-DUNIT_TEST
 unit: clean std
 
-debug: CFLAGS+=-DUNIT_TEST -DDEBUG
+debug: CFLAGS+=-DUNIT_TEST -DDEBUG -DDEBUG_HASH
 debug: clean std
 
 debugtest: CFLAGS+=-DDEBUG
