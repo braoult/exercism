@@ -11,6 +11,24 @@
 #include <stdlib.h>
 #endif
 
+/* Formulas used :
+ *
+ *       R\c 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9
+ *       0   A . . . . . . . I . . . . . . . Q . . .
+ *       1   . B . . . . . H . J . . . . . P . R . .
+ *       2   . . C . . . G . . . K . . . O . . . S .
+ *       3   . . . D . F . . . . . L . N . . . . . T
+ *  NR-1=4   . . . . E . . . . . . . M . . . . . . .
+ *
+ * First/last R :
+ *    I-A = Q-I = M-E = U-M = (NR-1)*2
+ *
+ * Others, flip between :
+ *    H-B = G-C = F-D = P-J = O-K = N-L = (NR-R-1)*2
+ * And :
+ *    J-H = K-G = L-F = R-P = S-O = T-N = R*2
+ */
+
 char *doit(char *t, size_t nr, int what)
 {
     int tlen=strlen(t);
