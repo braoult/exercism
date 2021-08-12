@@ -3,3 +3,4 @@ core
 *_test.sh
 test/
 .exercism
+.projectile
