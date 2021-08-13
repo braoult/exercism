@@ -1,6 +1,5 @@
 #include <ctype.h>
 #include "bob.h"
-#include <stdio.h>
 
 char*answers[] = {
     "Whatever.",
@@ -29,15 +28,13 @@ char *hey_bob(char *w)
  * https://github.com/braoult/exercism/blob/master/c/templates/GNUmakefile
  */
 #ifdef UNIT_TEST
+#include <stdio.h>
 int main(int ac, char **av)
 {
     int arg=1;
-    resistor_band_t i[2];
 
-    for (; arg<ac-1; ++arg, ++arg) {
-        *i=atoi(av[arg]);
-        *(i+1)=atoi(av[arg+1]);
-        printf("color(%d, %d)=%d\n", i[0], i[1], color_code(i));
+    for (; arg<ac; ++arg) {
+        printf("bob(%s)=%s\n", av[arg], hey_bob(av[arg]));
     }
 }
 #endif
