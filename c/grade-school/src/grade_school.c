@@ -39,7 +39,7 @@ int add_student(char *s, uint8_t g)
  */
 roster_t get_grade(uint8_t g)
 {
-    static roster_t r;
+    roster_t r;
     unsigned i, j=0;
 
     for (i=0; i<roster.count && GRADE(i)<=g; ++i) {

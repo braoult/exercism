@@ -28,10 +28,9 @@ unsigned square_root(unsigned i)
     if (i<=1)                                     /* 0 and 1 */
         return i;
 
-    //nbits = (sizeof(unsigned) * 8);
-    for (j = 4, max = 16L;; j += 2, max <<= 2L) {
+    for (j = 4, max = 16;; j += 2, max <<= 2) {
         if (j >= NBITS || i <= max) {
-            sq2 = (1L << (j >> 1));
+            sq2 = (1 << (j >> 1));
             break;
         }
     }
@@ -45,11 +44,18 @@ unsigned square_root(unsigned i)
 #ifdef UNIT_TEST
 int main(int ac, char **av)
 {
-    unsigned i, j;
+    unsigned i;
+/*    int arg=1;
 
+    for (; arg<ac; ++arg) {
+        i=atol(av[arg]);
+        printf("sqrt(%u)=%u\n", i, square_root(i));
+    }
+*/
     if (ac && *av)
         for (i=0; i<100000000; ++i)
             square_root(65025);
     printf("sq=%u\n", square_root(65536));
+
 }
 #endif
