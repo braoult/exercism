@@ -3,10 +3,6 @@
 #include <string.h>
 #include <malloc.h>
 
-/* V1: initial working version
- * V2 & V3: code simplification
- */
-
 static struct conv_s {
     unsigned char r;
     unsigned d;
@@ -49,8 +45,8 @@ char *to_roman_numeral(unsigned int n /*, int notation */ )
                 for (i=mult%5; i>0; --i)
                     res[pos++]=conv[cur].r;
             }
+            n-=mult*conv[cur].d;
         }
-        n-=mult*conv[cur].d;
         cur+=2;
     }
     if ((to=malloc(pos+1)))
