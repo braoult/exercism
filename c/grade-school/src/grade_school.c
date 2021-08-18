@@ -16,10 +16,9 @@ void clear_roster()
 /* testing program expects bool here, but I prefer to return students count,
  * it makes more sense for me.
  */
-int add_student(char *s, uint8_t g)
+int add_student(const char *s, const uint8_t g)
 {
-    int c=roster.count;
-    int i;
+    int c=roster.count, i;
 
     if (c >= MAX_STUDENTS)
         return 0;
@@ -37,12 +36,12 @@ int add_student(char *s, uint8_t g)
 /* to avoid this everytime, we could build up one roster per grade while
  * adding students, but really overkill here.
  */
-roster_t get_grade(uint8_t g)
+roster_t get_grade(const uint8_t g)
 {
     roster_t r;
-    unsigned i, j=0;
+    unsigned i, j;
 
-    for (i=0; i<roster.count && GRADE(i)<=g; ++i) {
+    for (i=0, j=0; i<roster.count && GRADE(i)<=g; ++i) {
         if (GRADE(i)==g)
             r.students[j++]=STD(i);
     }

@@ -3,14 +3,12 @@
 
 #include <stddef.h>
 #include <stdint.h>
-//#include <stdbool.h>
 
-#define MAX_NAME_LENGTH 20
 #define MAX_STUDENTS    20
 
 typedef struct student_s {
     uint8_t grade;
-    char *name;
+    const char *name;
 } student_t;
 
 typedef struct {
@@ -18,10 +16,10 @@ typedef struct {
     student_t students[MAX_STUDENTS];
 } roster_t;
 
-void clear_roster();
-int add_student(char *, uint8_t);
-roster_t get_grade(uint8_t);
-roster_t get_roster();
+void clear_roster(void);
+int add_student(const char *student, const uint8_t grade);
+roster_t get_grade(const uint8_t grade);
+roster_t get_roster(void);
 
 /* See GNUmakefile below for explanation
  * https://github.com/braoult/exercism/blob/master/c/templates/GNUmakefile
