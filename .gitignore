@@ -2,5 +2,6 @@ core
 *.out
 *_test.sh
 test/
+users/
 .exercism
 .projectile
