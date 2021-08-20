@@ -12,6 +12,7 @@ const int *binary_search(int value, const int *arr, size_t length);
 #include <stdio.h>
 #include <stdlib.h>
 #endif
+
 #ifdef  TESTALL
 #undef  TEST_IGNORE
 #define TEST_IGNORE() {}

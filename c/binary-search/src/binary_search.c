@@ -4,8 +4,7 @@ const int *binary_search(int v, const int *a, size_t size)
 {
     size_t lo, hi, i;
 
-    /* quickly exclude invalid/trivial results :
-     * NULL or empty array, value out of bounds
+    /* early exclude invalid/trivial result: NULL/empty array, value off bounds
      */
     if (!size || !a || v < *a || v > *(a+size-1))
         return NULL;
@@ -22,7 +21,6 @@ const int *binary_search(int v, const int *a, size_t size)
  * https://github.com/braoult/exercism/blob/master/c/templates/GNUmakefile
  */
 #ifdef UNIT_TEST
-#include <stdio.h>
 int main(int ac, char **av)
 {
     int arg=1, *res;

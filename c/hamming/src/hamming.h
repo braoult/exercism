@@ -3,9 +3,8 @@
 
 int compute(const char *lhs, const char *rhs);
 
-/* Note: For explanation on section below, see 'GNUfilename' included in
- * link below :
- * https://exercism.io/my/solutions/103b2f7d92db42309c1988030f5202c7
+/* See GNUmakefile below for explanation
+ * https://github.com/braoult/exercism/blob/master/c/templates/GNUmakefile
  */
 #ifdef  TESTALL
 #undef  TEST_IGNORE
