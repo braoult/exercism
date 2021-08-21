@@ -48,4 +48,4 @@ debugtest: CFLAGS+=-DDEBUG
 debugtest: test
 
 std: src/*.c src/*.h
-	$(CC) $(CFLAGS) src/*.c -o test.out
+	$(CC) $(CFLAGS) src/*.c -o tests.out  $(LIBS)
