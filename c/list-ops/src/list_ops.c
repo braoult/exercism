@@ -4,8 +4,6 @@
 
 #include "list_ops.h"
 
-#define SIZE(l) ((l)->length * sizeof(list_element_t))
-
 list_t *new_list(size_t len, list_element_t elts[])
 {
     list_t *list;
