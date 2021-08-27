@@ -29,6 +29,9 @@ include makefile
 all: CFLAGS+=-DTESTALL
 all: clean test
 
+nowarn: CFLAGS:=$(filter-out -Wextra -Wall,$(CFLAGS))
+nowarn: clean test
+
 debugall: CFLAGS+=-DDEBUG
 debugall: all
 
