@@ -1,9 +1,11 @@
 #include "allergies.h"
 
+#ifdef USE_ALLERGIC_TO_FUNCTION
 bool is_allergic_to(const allergen_t all, const uint32_t val)
 {
     return !!(val & (1 << all));
 }
+#endif
 
 allergen_list_t get_allergens(uint32_t val)
 {

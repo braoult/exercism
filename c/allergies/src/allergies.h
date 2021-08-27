@@ -21,9 +21,13 @@ typedef struct {
    bool allergens[ALLERGEN_COUNT];
 } allergen_list_t;
 
-// We could use macro...
-// #define is_allergic_to(allerg, val) (!!((val) & (1 << (allerg))))
+// We can choose macro or function
+#ifdef USE_ALLERGIC_TO_FUNCTION
 bool is_allergic_to(const allergen_t allergen, const uint32_t value);
+#else
+#define is_allergic_to(allerg, val) (!!((val) & (1 << (allerg))))
+#endif
+
 allergen_list_t get_allergens(uint32_t value);
 
 /* See GNUmakefile below for explanation
