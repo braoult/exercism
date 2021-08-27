@@ -33,7 +33,7 @@ all: CFLAGS+=-DTESTALL
 all: clean test
 
 nowarn: CFLAGS:=$(filter-out -Wextra -Wall,$(CFLAGS))
-nowarn: clean all
+nowarn: all
 
 debug: CFLAGS+=-DDEBUG
 debug: all
