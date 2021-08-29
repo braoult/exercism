@@ -17,13 +17,13 @@
 #   nowarn: compile with no -Wall and -Wextra, and run all predefined tests
 #   debug: compile with -DDEBUG and run all predefined tests
 #   mem: perform memcheck with all tests enabled
-#   unit: build standalone (unit) binary
-#   unitnowarn: build standalone binary with -Wall and -Wextra disabled
+#   unit: build standalone (unit) bimary
+#   unitnowarn: build standalone (unit) binary with -Wall and -Wextra disabled
 #   unitdebug: build standalone binary with -DDEBUG
 #
 # Original 'makefile' targets can be used (test, memcheck, clean, ...)
 
-.PHONY: default all nowarn debug mem unitnowarn unitdebug unit
+.PHONY: default all nowarn debug mem unit unitnowarn unitdebug standalone
 
 default: all
 
@@ -32,8 +32,8 @@ include makefile
 all: CFLAGS+=-DTESTALL
 all: clean test
 
-nowarn: CFLAGS:=$(filter-out -Wextra -Wall,$(CFLAGS))
-nowarn: all
+nowarn: CFLAGS:=$(filter-out -Werror,$(CFLAGS))
+nowarn: clean all
 
 debug: CFLAGS+=-DDEBUG
 debug: all
@@ -41,7 +41,7 @@ debug: all
 mem: CFLAGS+=-DTESTALL
 mem: clean memcheck
 
-unitnowarn: CFLAGS:=$(filter-out -Wextra -Wall,$(CFLAGS))
+unitnowarn: CFLAGS:=$(filter-out -Werror,$(CFLAGS))
 unitnowarn: clean unit
 
 unitdebug: CFLAGS+=-DDEBUG
