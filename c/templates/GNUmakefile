@@ -14,11 +14,11 @@
 # 3) add ex.c to exercise source code, and create a suitable main function
 # 4) use make with one of the following targets :
 #   all: compile and run all predefined tests.
-#   nowarn: compile with no -Wall and -Wextra, and run all predefined tests
+#   nowarn: compile with no -Werror, and run all predefined tests
 #   debug: compile with -DDEBUG and run all predefined tests
 #   mem: perform memcheck with all tests enabled
 #   unit: build standalone (unit) bimary
-#   unitnowarn: build standalone (unit) binary with -Wall and -Wextra disabled
+#   unitnowarn: build standalone (unit) binary with -Werror disabled
 #   unitdebug: build standalone binary with -DDEBUG
 #
 # Original 'makefile' targets can be used (test, memcheck, clean, ...)
