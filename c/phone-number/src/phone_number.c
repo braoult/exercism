@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
@@ -10,15 +9,15 @@
 #define LPAREN    '('
 
 /* this version is likely not very stable, due to poor scanf() capabilities
- * I made it to offer an option to traditional strtok() of manual string
+ * I made it to offer an option to traditional strtok() or manual string
  * parsing.
  */
 char *phone_number_clean(const char *input)
 {
     char *scan="%m[+(0-9]%*[()-. ]%m[0-9]%*[()-. ]%m[0-9]%*[-. ]%m[0-9]";
     char *sn[4];
-    int64_t num[4];
-    int64_t *p = &num[0];
+    uint64_t num[4];
+    uint64_t *p = &num[0];
     int nmatch;
     char *res;
 
@@ -30,7 +29,7 @@ char *phone_number_clean(const char *input)
     nmatch = sscanf(input, scan, &sn[0], &sn[1], &sn[2], &sn[3]);
 
     for (int i=0; i<nmatch; ++i) {
-        num[i] = atol(*sn[i] == LPAREN? sn[i]+1: sn[i]);
+        *(p+i) = atol(*sn[i] == LPAREN? sn[i]+1: sn[i]);
         free(sn[i]);
     }
 
@@ -39,19 +38,21 @@ char *phone_number_clean(const char *input)
         case 0:
             return res;
         case 1:
-            if (num[0] > 10000000000)
-                num[0] -= 10000000000;
-            if (num[0] > 9999999999 || num[0] < 2000000000)
+            if (*p > 10000000000)                 /* 1 000 000 0000 */
+                *p -= 10000000000;
+            if (*p > 9999999999 ||                /* 999 999 9999 */
+                *p < 2000000000)                  /* 200 000 0000 */
                 return res;
             break;
         case 4:                                   /* area */
-            if (num[0] != 1)
+            if (*p != 1)
                 return res;
             p++;
-            fallthrough;
+            fallthrough;                          /* only gcc>=7 & clang>=12 */
         case 3:                                   /* last 3 numbers */
-            if (p[0] < 200 || p[0] > 999 || p[1] < 200 || p[1] > 999 ||
-                p[2] < 0 || p[2] > 9999)
+            if (*p < 200 || *p > 999 ||
+                *(p+1) < 200 || *(p+1) > 999 ||
+                *(p+2) > 9999)
                 return res;
             break;
     }

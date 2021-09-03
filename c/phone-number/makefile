@@ -11,6 +11,7 @@ CFLAGS += -Wextra
 CFLAGS += -pedantic
 CFLAGS += -Werror
 CFLAGS += -Wmissing-declarations
+CFLAGS += -Wimplicit-fallthrough
 CFLAGS += -DUNITY_SUPPORT_64
 
 ASANFLAGS  = -fsanitize=address
@@ -34,4 +35,4 @@ clean:
 
 tests.out: test/*.c src/*.c src/*.h
 	@echo Compiling $@
-	@$(CC) $(CFLAGS) src/*.c test/vendor/unity.c test/*.c -o tests.out $(LIBS)
+	$(CC) $(CFLAGS) src/*.c test/vendor/unity.c test/*.c -o tests.out $(LIBS)
