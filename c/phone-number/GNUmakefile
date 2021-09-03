@@ -27,6 +27,10 @@
 
 default: all
 
+ALLSOURCES=$(wildcard ./*.c)
+TESTSOURCES=$(wildcard ./test_*.c)
+SRC=$(filter-out $(TESTSOURCES),$(ALLSOURCES))
+
 include makefile
 
 all: CFLAGS+=-DTESTALL
@@ -48,5 +52,6 @@ unitdebug: CFLAGS+=-DDEBUG
 unitdebug: clean unit
 
 unit: CFLAGS+=-DUNIT_TEST
-unit: src/*.c src/*.h
-	$(CC) $(CFLAGS) src/*.c -o tests.out  $(LIBS)
+unit: SOURCES=$(wildcard ./*.c)
+unit: *.c *.h
+	$(CC) $(CFLAGS) $(SRC) -o tests.out  $(LIBS)
