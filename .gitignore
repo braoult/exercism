@@ -2,6 +2,7 @@ core
 *.out
 *_test.sh
 test/
+test-framework/
 users/
 .exercism
 .projectile
