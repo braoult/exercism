@@ -130,8 +130,7 @@ void list_delete(const struct list *list, const ll_data_t data)
  */
 void list_destroy(struct list *list)
 {
-    struct list_head *cur;
-    __typeof(cur) tmp;
+    struct list_head *cur, *tmp;
 
     list_for_each_safe(cur, tmp, (struct list_head *)list)
         _list_del(cur);
