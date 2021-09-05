@@ -12,6 +12,10 @@
 /* this version is likely not very stable, due to poor scanf() capabilities
  * I made it to offer an option to traditional strtok() or manual string
  * parsing.
+ * Examples:
+ *    (1 (222-333.4444
+ *    1)))))) 222))) ...---...  333 ...---... 4444
+ * are both valid here, when they surely should not :-)
  */
 static char *scan="%m[+(0-9]%*[()-. ]%m[0-9]%*[)-. ]%m[0-9]%*[-. ]%m[0-9]";
 
