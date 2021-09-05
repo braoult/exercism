@@ -13,12 +13,13 @@
  * I made it to offer an option to traditional strtok() or manual string
  * parsing.
  */
+static char *scan="%m[+(0-9]%*[()-. ]%m[0-9]%*[)-. ]%m[0-9]%*[-. ]%m[0-9]";
+
 char *phone_number_clean(const char *input)
 {
-    char *scan="%m[+(0-9]%*[()-. ]%m[0-9]%*[()-. ]%m[0-9]%*[-. ]%m[0-9]";
-    char *sn[4];
+    char *sn[4] = { 0 };
     uint64_t num[4];
-    uint64_t *p = &num[0];
+    uint64_t *p = &*num;
     int nmatch;
     char *res;
 
@@ -31,26 +32,26 @@ char *phone_number_clean(const char *input)
 
     for (int i=0; i<nmatch; ++i) {
         *(p+i) = atol(*sn[i] == LPAREN? sn[i]+1: sn[i]);
-        free(sn[i]);
+        free(sn[i]);                              /* due to scanf %m */
     }
 
     switch (nmatch) {
         case 2:
         case 0:
             return res;
-        case 1:
+        case 1:                                   /* full number */
             if (*p > 10000000000)                 /* 1 000 000 0000 */
                 *p -= 10000000000;
             if (*p > 9999999999 ||                /* 999 999 9999 */
                 *p < 2000000000)                  /* 200 000 0000 */
                 return res;
             break;
-        case 4:                                   /* area */
+        case 4:                                   /* country code */
             if (*p != 1)
                 return res;
-            p++;
+            p++;                                  /* go to area number */
             fallthrough;                          /* only gcc>=7 & clang>=12 */
-        case 3:                                   /* last 3 numbers */
+        case 3:                                   /* start with area number */
             if (*p < 200 || *p > 999 ||
                 *(p+1) < 200 || *(p+1) > 999 ||
                 *(p+2) > 9999)
