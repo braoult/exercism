@@ -17,7 +17,7 @@ static char *scan="%m[+(0-9]%*[()-. ]%m[0-9]%*[)-. ]%m[0-9]%*[-. ]%m[0-9]";
 
 char *phone_number_clean(const char *input)
 {
-    char *sn[4] = { 0 };
+    char *sn[4];
     uint64_t num[4];
     uint64_t *p = &*num;
     int nmatch;
@@ -37,6 +37,8 @@ char *phone_number_clean(const char *input)
 
     switch (nmatch) {
         case 2:
+            /* maybe 2 could be valid, like 333 3334444 ?
+             */
         case 0:
             return res;
         case 1:                                   /* full number */
@@ -58,6 +60,9 @@ char *phone_number_clean(const char *input)
                 return res;
             break;
     }
+    /* we don't care if some num has random value here (initialized), snprintf
+     * will consume only what is needed to fill the number
+     */
     snprintf(res, LEN_NUM+1, "%ld%ld%ld", *p, *(p+1), *(p+2));
 
     return res;
