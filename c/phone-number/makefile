@@ -13,6 +13,20 @@ CFLAGS += -Werror
 CFLAGS += -Wmissing-declarations
 CFLAGS += -DUNITY_SUPPORT_64
 
+# detect compiler.
+REALCC=$(realpath $(shell which $(CC)))
+CC_VERSION_TEXT=$(shell $(REALCC) --version 2>/dev/null | head -n 1)
+
+# fix discrepancies in compilers warnings. Only gcc and clang for now.
+ifneq ($(findstring clang,$(CC_VERSION_TEXT)),)
+CFLAGS += -Wimplicit-fallthrough
+else
+ifneq ($(findstring gcc,$(CC_VERSION_TEXT)),)
+CFLAGS := $(filter-out -Wimplicit-fallthrough%,$(CFLAGS))
+CFLAGS += -Wimplicit-fallthrough=5
+endif
+endif
+
 ASANFLAGS  = -fsanitize=address
 ASANFLAGS += -fno-common
 ASANFLAGS += -fno-omit-frame-pointer
@@ -24,7 +38,7 @@ test: tests.out
 .PHONY: memcheck
 memcheck: ./*.c ./*.h
 	@echo Compiling $@
-	@$(CC) $(ASANFLAGS) $(CFLAGS) test-framework/unity.c ./*.c -o memcheck.out $(LIBS)
+	$(CC) $(ASANFLAGS) $(CFLAGS) test-framework/unity.c ./*.c -o memcheck.out $(LIBS)
 	@./memcheck.out
 	@echo "Memory check passed"
 
@@ -34,4 +48,4 @@ clean:
 
 tests.out: ./*.c ./*.h
 	@echo Compiling $@
-	@$(CC) $(CFLAGS) test-framework/unity.c ./*.c -o tests.out $(LIBS)
+	$(CC) $(CFLAGS) test-framework/unity.c ./*.c -o tests.out $(LIBS)
