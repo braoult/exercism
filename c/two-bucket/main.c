@@ -20,7 +20,7 @@ int main(int ac, char **av)
         res = measure(b1, b2, goal, start);
         printf("   pos=%d count=%d goal=%d liters=%d\n",
                res.possible, res.move_count, res.goal_bucket,
-               ##res.other_bucket_liters);
+               res.other_bucket_liters);
     }
 }
 #endif

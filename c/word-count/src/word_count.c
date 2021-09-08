@@ -18,10 +18,10 @@
  * The following will return INVALID_WORD:
  *   P2P
  *   0xFF
- *   A'2
+ *   A''B
  * The following will return 2 numbers/words:
  *   1'2
- *   A''B
+ *   A'2
  */
 
 /* get next word in string

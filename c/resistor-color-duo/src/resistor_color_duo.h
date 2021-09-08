@@ -15,7 +15,7 @@ typedef enum {
     ERROR=-1,
 } resistor_band_t;
 
-extern resistor_band_t color_code(resistor_band_t *);
+extern resistor_band_t color_code(resistor_band_t [static 2]);
 
 #ifdef TESTALL
 #undef  TEST_IGNORE

@@ -1,5 +1,4 @@
 #include "two_bucket.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 /* We will choose to use a board of (X,Y) squares, with the sizes of the 2

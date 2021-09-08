@@ -22,6 +22,6 @@ bucket_result_t measure(bucket_liters_t bucket_1_size,
                         bucket_liters_t goal_volume,
                         bucket_id_t start_bucket);
 
-#include "br-common.h"
-
 #endif  /* TWO_BUCKETS_H */
+
+#include "br-common.h"
