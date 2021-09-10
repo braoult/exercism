@@ -18,9 +18,9 @@ if (($# != 1)) || [[ ! -d $1 ]]; then
 fi
 TEMPLATES="$ROOT/templates"
 
-# copy GNUmakefile and br-common.h
+# copy main.c, GNUmakefile and br-common.h
 echo -n "copying GNUmakefile and br-common.h files... "
-cp -p "$TEMPLATES/"{GNUmakefile,br-common.h} "$1"
+cp -p "$TEMPLATES/"{GNUmakefile,br-common.h,main.c} "$1"
 echo done.
 # add include br-common.h in exercise include file
 INC=${1%/}
